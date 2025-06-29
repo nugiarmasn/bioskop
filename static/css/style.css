@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Oswald:wght@700&display=swap');
+body {font-family: 'Montserrat', sans-serif;background-color: #121212;color: #e0e0e0;}
+.navbar {background-color: rgba(18, 18, 18, 0.8);backdrop-filter: blur(10px);border-bottom: 1px solid #333;}
+.navbar-brand {font-family: 'Oswald', sans-serif;font-size: 1.8rem;color: #ffffff !important;}
+.nav-link {font-weight: 500;transition: color 0.3s ease;}
+.nav-link:hover, .nav-link.active {color: #00aaff !important;}
+.hero-section {position: relative;height: 40vh;display: flex;justify-content: center;align-items: center;text-align: center;color: white;background-image: url('../img/background.jpg');background-size: cover;background-position: center;border-radius: 15px;overflow: hidden;margin-bottom: 3rem;}
+.hero-section::before {content: '';position: absolute;top: 0;left: 0;width: 100%;height: 100%;background: linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,0.8));}
+.hero-content {position: relative;z-index: 1;}
+.hero-content h1 {font-family: 'Oswald', sans-serif;font-size: 3.5rem;text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);}
+.card {background-color: #1e1e1e;border: 1px solid #333;border-radius: 15px;box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);transition: transform 0.3s ease, box-shadow 0.3s ease;}
+.card-header {background-color: #252525;border-bottom: 1px solid #333;font-family: 'Oswald', sans-serif;font-size: 1.5rem;}
+.form-label {font-weight: 500;color: #00aaff;}
+.form-control, .form-select {background-color: #2a2a2a;border: 1px solid #444;color: #f0f0f0;border-radius: 8px;}
+.form-control:focus, .form-select:focus {background-color: #2a2a2a;border-color: #00aaff;box-shadow: 0 0 0 0.25rem rgba(0, 170, 255, 0.25);color: #f0f0f0;}
+.btn-glow {background-image: linear-gradient(45deg, #007bff, #00aaff);border: none;border-radius: 50px;padding: 12px 30px;font-weight: 700;color: white;box-shadow: 0 0 20px rgba(0, 170, 255, 0.5);transition: all 0.3s ease;}
+.btn-glow:hover {transform: translateY(-3px);box-shadow: 0 0 30px rgba(0, 170, 255, 0.8);}
+.table {--bs-table-bg: #1e1e1e;--bs-table-color: #e0e0e0;--bs-table-border-color: #333;--bs-table-striped-bg: #252525;--bs-table-hover-bg: #2a2a2a;}
+.table thead {background-color: #0d6efd;color: white;}
+.table thead th {font-family: 'Oswald', sans-serif;letter-spacing: 0.5px;}
+.action-btn {transition: transform 0.2s ease;display: inline-block;}
+.action-btn:hover {transform: scale(1.2);}
+.accordion-button {background-color: #252525 !important;color: #e0e0e0 !important;box-shadow: none !important;}
+.accordion-button:not(.collapsed) {background-color: #333 !important;}
