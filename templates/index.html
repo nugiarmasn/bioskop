@@ -1,44 +1,47 @@
 {% extends 'layout.html' %}
-{% block title %}Kalkulator Rekomendasi Film SAW{% endblock %}
+{% block title %}Rekomendasi Film Terbaik{% endblock %}
+
 {% block content %}
 <div class="hero-section" data-aos="zoom-in">
     <div class="hero-content">
         <h1>TEMUKAN FILM TERBAIKMU</h1>
-        <p class="lead">Gunakan metode SAW untuk rekomendasi film yang dipersonalisasi</p>
+        <p class="lead">Peringkat film berdasarkan kriteria dan bobot yang telah ditentukan</p>
     </div>
 </div>
-<form method="post" action="/">
-    <div class="card" data-aos="fade-up">
-        <div class="card-header"><i class="fas fa-sliders-h"></i> 1. Tentukan Bobot Preferensi Anda</div>
-        <div class="card-body p-4">
-            <div class="row g-4">
-                <div class="col-md-6">
-                    <div class="mb-3"><label for="w1" class="form-label">C1 - Harga Tiket (Cost)</label><input type="number" class="form-control" id="w1" name="w1" step="0.01" min="0" max="1" value="{{ bobot_sebelumnya.w1 or '0.25' }}" required></div>
-                    <div class="mb-3"><label for="w2" class="form-label">C2 - Review Penonton (Benefit)</label><input type="number" class="form-control" id="w2" name="w2" step="0.01" min="0" max="1" value="{{ bobot_sebelumnya.w2 or '0.30' }}" required></div>
-                    <div class="mb-3"><label for="w3" class="form-label">C3 - Cuplikan Film (Benefit)</label><input type="number" class="form-control" id="w3" name="w3" step="0.01" min="0" max="1" value="{{ bobot_sebelumnya.w3 or '0.15' }}" required></div>
-                </div>
-                <div class="col-md-6">
-                    <div class="mb-3"><label for="w4" class="form-label">C4 - Genre Film (Benefit)</label><input type="number" class="form-control" id="w4" name="w4" step="0.01" min="0" max="1" value="{{ bobot_sebelumnya.w4 or '0.15' }}" required></div>
-                    <div class="mb-3"><label for="w5" class="form-label">C5 - Kesesuaian Umur (Benefit)</label><input type="number" class="form-control" id="w5" name="w5" step="0.01" min="0" max="1" value="{{ bobot_sebelumnya.w5 or '0.15' }}" required></div>
-                </div>
-            </div>
-            <div class="d-grid mt-4"><button type="submit" class="btn btn-glow btn-lg"><i class="fas fa-calculator"></i> Hitung Rekomendasi</button></div>
-        </div>
+
+<div class="card text-center mb-5" data-aos="fade-up">
+    <div class="card-body p-4">
+        <h2 class="card-title">Peringkat Film Otomatis</h2>
+        <p>Peringkat di bawah ini dihitung secara otomatis berdasarkan kriteria & bobot dari halaman "Kelola Kriteria".</p>
+        <a href="{{ url_for('index') }}" class="btn btn-glow">
+            <i class="fas fa-sync-alt"></i> Muat Ulang Rekomendasi
+        </a>
     </div>
-</form>
-{% if hasil %}
+</div>
+
+{% if hasil and langkah %}
 <div class="mt-5" data-aos="fade-up" data-aos-delay="200">
     <h2 class="text-center mb-4" style="font-family: 'Oswald', sans-serif;">HASIL PERHITUNGAN METODE SAW</h2>
     <hr style="border-color: #444; border-width: 2px;">
+    
+    <!-- Hasil Peringkat Utama -->
     <div class="card mt-4">
-        <div class="card-header bg-primary text-white"><h4><i class="fas fa-trophy"></i> Hasil Akhir Perankingan (V)</h4></div>
+        <div class="card-header bg-primary text-white">
+            <h4><i class="fas fa-trophy"></i> Hasil Akhir Perankingan (V)</h4>
+        </div>
         <div class="card-body table-responsive p-0">
             <table class="table table-hover align-middle mb-0">
-                <thead><tr><th class="text-center">Peringkat</th><th>Judul Film</th><th>Skor Akhir (V)</th></tr></thead>
+                <thead>
+                    <tr>
+                        <th class="text-center">Peringkat</th>
+                        <th>Judul Film</th>
+                        <th>Skor Akhir (V)</th>
+                    </tr>
+                </thead>
                 <tbody>
                     {% for row in hasil %}
                     <tr>
-                        <td class="text-center"><span class="badge bg-warning text-dark fs-5 p-2" style="font-family: 'Oswald', sans-serif;">{{ loop.index }}</span></td>
+                        <td class="text-center"><span class="badge bg-warning text-dark fs-5 p-2">{{ loop.index }}</span></td>
                         <td><h5>{{ row.judul }}</h5></td>
                         <td><strong class="fs-5 text-info">{{ '%.4f'|format(row.skor) }}</strong></td>
                     </tr>
@@ -47,37 +50,69 @@
             </table>
         </div>
     </div>
+
+    <!-- Accordion untuk Detail Perhitungan -->
     <div class="accordion mt-4" id="detailPerhitungan">
         <div class="accordion-item card">
             <h2 class="accordion-header card-header p-0" id="headingOne">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">Lihat Detail Perhitungan (Matriks Keputusan & Normalisasi)</button>
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                    Lihat Detail Perhitungan (Matriks X & Normalisasi R)
+                </button>
             </h2>
             <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#detailPerhitungan">
                 <div class="accordion-body card-body">
+                    
+                    <!-- Langkah 1: Matriks Keputusan (X) -->
                     <h5 class="mt-3">Langkah 1: Matriks Keputusan (X)</h5>
                     <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <thead><tr><th>Alternatif</th><th>C1 (Harga)</th><th>C2 (Review)</th><th>C3 (Cuplikan)</th><th>C4 (Genre)</th><th>C5 (Umur)</th></tr></thead>
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Judul</th>
+                                    {% for k in langkah.kriteria_list %}
+                                        <th>C{{ loop.index }} ({{ k.nama_kriteria }})</th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
                             <tbody>
                                 {% for row in langkah.matriks_keputusan %}
                                 <tr>
-                                    <td>{{ row.judul }}</td><td>Rp {{ '{:,.0f}'.format(row.harga_tiket)|replace(',', '.') }}</td><td>{{ row.review_penonton }}</td>
-                                    <td>{{ row.skor_cuplikan }}</td><td>{{ row.nilai_genre }} ({{ row.genre }})</td><td>{{ row.nilai_umur }} ({{ row.kesesuaian_umur }})</td>
+                                    <td>{{ row.judul }}</td>
+                                    {% for k in langkah.kriteria_list %}
+                                        <td>{{ row[k.kolom_film] }}</td>
+                                    {% endfor %}
                                 </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
                     </div>
-                    <h5 class="mt-4">Langkah 2: Normalisasi Matriks (R)</h5>
-                    <p><strong>Bobot (W):</strong> [{{ bobot_sebelumnya.w1 }}, {{ bobot_sebelumnya.w2 }}, {{ bobot_sebelumnya.w3 }}, {{ bobot_sebelumnya.w4 }}, {{ bobot_sebelumnya.w5 }}]</p>
+
+                    <!-- Langkah 2: Matriks Normalisasi (R) -->
+                    <h5 class="mt-4">Langkah 2: Matriks Normalisasi (R)</h5>
+                    <p><strong>Total Bobot:</strong>
+                        {% set total_bobot = namespace(value=0) %}
+                        {% for k in langkah.kriteria_list %}
+                            {% set total_bobot.value = total_bobot.value + k.bobot %}
+                        {% endfor %}
+                        {{ '%.2f'|format(total_bobot.value) }}
+                    </p>
                     <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <thead><tr><th>Alternatif</th><th>C1</th><th>C2</th><th>C3</th><th>C4</th><th>C5</th></tr></thead>
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Judul</th>
+                                    {% for k in langkah.kriteria_list %}
+                                        <th>C{{ loop.index }}</th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
                             <tbody>
                                 {% for row in langkah.matriks_normalisasi %}
                                 <tr>
-                                    <td>{{ row.judul }}</td><td>{{ '%.4f'|format(row.c1) }}</td><td>{{ '%.4f'|format(row.c2) }}</td>
-                                    <td>{{ '%.4f'|format(row.c3) }}</td><td>{{ '%.4f'|format(row.c4) }}</td><td>{{ '%.4f'|format(row.c5) }}</td>
+                                    <td>{{ row.judul }}</td>
+                                    {% for k in langkah.kriteria_list %}
+                                        <td>{{ '%.4f'|format(row[k.kolom_film]) }}</td>
+                                    {% endfor %}
                                 </tr>
                                 {% endfor %}
                             </tbody>

@@ -4,9 +4,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}FilmRecs{% endblock %} - Rekomendasi Film SAW</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Oswald:wght@700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -16,42 +13,24 @@
 <body>
     <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container">
-          <a class="navbar-brand" href="{{ url_for('index') }}"><i class="fas fa-film"></i> FilmRecs</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-              <li class="nav-item">
-                <a class="nav-link {% if request.endpoint == 'index' %}active{% endif %}" href="{{ url_for('index') }}"><i class="fas fa-calculator"></i> Kalkulator SAW</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link {% if 'film' in request.endpoint %}active{% endif %}" href="{{ url_for('kelola_film') }}"><i class="fas fa-database"></i> Kelola Film</a>
-              </li>
-            </ul>
-          </div>
+            <a class="navbar-brand" href="{{ url_for('index') }}"><i class="fas fa-film"></i> FilmRecs</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link {% if request.endpoint == 'index' %}active{% endif %}" href="{{ url_for('index') }}"><i class="fas fa-calculator"></i> Kalkulator SAW</a></li>
+                    <li class="nav-item"><a class="nav-link {% if 'film' in request.endpoint %}active{% endif %}" href="{{ url_for('kelola_film') }}"><i class="fas fa-database"></i> Kelola Film</a></li>
+                    <!-- LINK BARU -->
+                    <li class="nav-item"><a class="nav-link {% if 'kriteria' in request.endpoint %}active{% endif %}" href="{{ url_for('kelola_kriteria') }}"><i class="fas fa-tasks"></i> Kelola Kriteria</a></li>
+                </ul>
+            </div>
         </div>
     </nav>
-    <main class="container mt-4 mb-5">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-          {% if messages %}
-            {% for category, message in messages %}
-              <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert" data-aos="fade-down">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-              </div>
-            {% endfor %}
-          {% endif %}
-        {% endwith %}
+    <main class="container mt-5 mb-5">
+        {% with messages = get_flashed_messages(with_categories=true) %}{% if messages %}{% for category, message in messages %}<div class="alert alert-{{ category }} alert-dismissible fade show" role="alert" data-aos="fade-down">{{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>{% endfor %}{% endif %}{% endwith %}
         {% block content %}{% endblock %}
     </main>
-    <footer class="text-center p-4 mt-auto" style="background-color: #121212; border-top: 1px solid #333;">
-        <div class="container">© 2024 FilmRecs - Dibuat dengan Flask, MySQL, dan <i class="fas fa-heart text-danger"></i>.</div>
-    </footer>
+    <footer class="bg-dark text-white text-center p-3 mt-auto"><div class="container">© 2024 FilmRecs - Dibuat dengan Flask, MySQL, dan <i class="fas fa-heart text-danger"></i>.</div></footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-      AOS.init({duration: 800, once: true, offset: 50});
-    </script>
+    <script>AOS.init({duration: 800, once: true, offset: 50});</script>
 </body>
 </html>
